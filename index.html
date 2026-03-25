@@ -11,9 +11,10 @@
         label { font-weight: bold; display: block; margin-top: 10px; font-size: 14px; }
         input { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 16px;}
         button { width: 100%; padding: 12px; background-color: #28a745; color: white; border: none; border-radius: 4px; margin-top: 20px; font-size: 16px; font-weight: bold; cursor: pointer; }
-        .result { margin-top: 20px; padding: 15px; background-color: #e9ecef; border-radius: 4px; text-align: center; }
-        .result p { margin: 5px 0; font-size: 16px; }
-        .highlight { font-weight: bold; color: #d9534f; font-size: 24px; }
+        .result { margin-top: 20px; padding: 15px; background-color: #e9ecef; border-radius: 4px; }
+        .result p { margin: 5px 0; font-size: 14px; }
+        .highlight { font-weight: bold; color: #d9534f; font-size: 20px; text-align: center; display: block; margin-top: 10px; }
+        hr { border: 1px solid #ddd; margin: 15px 0; }
     </style>
 </head>
 <body>
@@ -21,13 +22,13 @@
         <h2>Fiyat Hesaplayıcı</h2>
 
         <label>İmplant Adeti</label>
-        <input type="number" id="impQty" placeholder="Örn: 150">
+        <input type="number" id="impQty" placeholder="Örn: 50">
 
         <label>İmplant Birim Maliyeti</label>
         <input type="number" id="impPrice" placeholder="Örn: 500">
 
         <label>Abutment Adeti</label>
-        <input type="number" id="abutQty" placeholder="Örn: 150">
+        <input type="number" id="abutQty" placeholder="Örn: 50">
 
         <label>Abutment Birim Maliyeti</label>
         <input type="number" id="abutPrice" placeholder="Örn: 200">
@@ -41,13 +42,25 @@
         <button onclick="calculate()">Hesapla</button>
 
         <div class="result" id="resultBox" style="display:none;">
-            <p>Toplam Maliyet: <strong id="totalCostDisplay">0</strong></p>
-            <p>Satılması Gereken Fiyat:</p>
-            <p class="highlight" id="sellPriceDisplay">0</p>
+            <p><strong>Maliyet Dökümü:</strong></p>
+            <p>İmplant Maliyeti: <span id="impCostDisp"></span></p>
+            <p>Abutment Maliyeti (%20 Hediye Düşülmüş): <span id="abutCostDisp"></span></p>
+            <p>Multiunit Maliyeti: <span id="multiCostDisp"></span></p>
+            <p>Cerrahi Set (<span id="setCountDisp"></span> Adet): <span id="setCostDisp"></span></p>
+            <hr>
+            <p><strong>Toplam Maliyet:</strong> <span id="totalCostDisplay"></span></p>
+            <span class="highlight">Satılması Gereken Fiyat: <br> <span id="sellPriceDisplay"></span></span>
+            <hr>
+            <p><strong>Sağlama (Marj Kontrolü):</strong></p>
+            <p style="font-size: 12px; color: #555;" id="proofDisp"></p>
         </div>
     </div>
 
     <script>
+        function formatCurrency(val) {
+            return val.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
         function calculate() {
             let impQty = parseFloat(document.getElementById('impQty').value) || 0;
             let impPrice = parseFloat(document.getElementById('impPrice').value) || 0;
@@ -59,20 +72,31 @@
             let implantCost = impQty * impPrice;
             let abutmentCost = (abutQty * 0.8) * abutPrice; 
             let multiunitCost = impQty * multiPrice;
-            let setCost = Math.floor(impQty / 100) * 400; 
+            
+            let setCount = impQty > 0 ? Math.ceil(impQty / 100) : 0;
+            let setCost = setCount * 400; 
 
             let totalCost = implantCost + abutmentCost + multiunitCost + setCost;
             
-            let sellPrice = 0;
             if (margin >= 100) {
                 alert("Kâr marjı %100 veya daha büyük olamaz!");
                 return;
-            } else {
-                sellPrice = totalCost / (1 - (margin / 100));
             }
+            
+            let sellPrice = totalCost / (1 - (margin / 100));
 
-            document.getElementById('totalCostDisplay').innerText = totalCost.toLocaleString('tr-TR', { maximumFractionDigits: 2 });
-            document.getElementById('sellPriceDisplay').innerText = sellPrice.toLocaleString('tr-TR', { maximumFractionDigits: 2 });
+            document.getElementById('impCostDisp').innerText = formatCurrency(implantCost);
+            document.getElementById('abutCostDisp').innerText = formatCurrency(abutmentCost);
+            document.getElementById('multiCostDisp').innerText = formatCurrency(multiunitCost);
+            document.getElementById('setCountDisp').innerText = setCount;
+            document.getElementById('setCostDisp').innerText = formatCurrency(setCost);
+
+            document.getElementById('totalCostDisplay').innerText = formatCurrency(totalCost);
+            document.getElementById('sellPriceDisplay').innerText = formatCurrency(sellPrice);
+            
+            let proofMargin = sellPrice > 0 ? ((sellPrice - totalCost) / sellPrice) * 100 : 0;
+            document.getElementById('proofDisp').innerText = `(${formatCurrency(sellPrice)} - ${formatCurrency(totalCost)}) / ${formatCurrency(sellPrice)} * 100 = %${proofMargin.toFixed(2)}`;
+
             document.getElementById('resultBox').style.display = 'block';
         }
     </script>
