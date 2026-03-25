@@ -101,7 +101,6 @@
     </div>
 
     <script>
-        // Veritabanı (LocalStorage) Başlatma
         let appData = JSON.parse(localStorage.getItem('implantAppData')) || {
             globalPrices: { abutment: 200, multiunit: 300, set: 400 },
             brands: [
@@ -117,7 +116,6 @@
 
         function init() {
             renderTabs();
-            // Başlangıçta ayarlar sayfasını veya ilk markayı aç
             if (appData.brands.length > 0) {
                 openCalcView(appData.brands[0].id);
             } else {
@@ -127,9 +125,8 @@
 
         function renderTabs() {
             const menu = document.getElementById('tabMenu');
-            menu.innerHTML = ''; // Temizle
+            menu.innerHTML = ''; 
 
-            // Ayarlar Sekmesi
             const settingsBtn = document.createElement('button');
             settingsBtn.className = 'tab-btn settings-tab';
             settingsBtn.id = 'tab-settings';
@@ -137,7 +134,6 @@
             settingsBtn.onclick = openSettingsView;
             menu.appendChild(settingsBtn);
 
-            // Marka Sekmeleri
             appData.brands.forEach(brand => {
                 const btn = document.createElement('button');
                 btn.className = 'tab-btn';
@@ -160,7 +156,6 @@
             document.getElementById('calcView').style.display = 'none';
             document.getElementById('settingsView').style.display = 'block';
 
-            // Global Fiyatları Doldur
             document.getElementById('setAbutPrice').value = appData.globalPrices.abutment;
             document.getElementById('setMultiPrice').value = appData.globalPrices.multiunit;
             document.getElementById('setSetPrice').value = appData.globalPrices.set;
@@ -175,11 +170,9 @@
             document.getElementById('calcView').style.display = 'block';
             document.getElementById('resultBox').style.display = 'none';
 
-            // Marka adını başlığa yazdır
             const brand = appData.brands.find(b => b.id === brandId);
             document.getElementById('calcTitle').innerText = brand.name + " Hesaplayıcı";
 
-            // Girdileri temizle
             document.getElementById('impQty').value = '';
             document.getElementById('abutQty').value = '';
             document.getElementById('multiQty').value = '';
@@ -220,6 +213,9 @@
                 saveData();
                 renderTabs();
                 renderBrandsList();
+                if (activeBrandId === id) {
+                    init(); 
+                }
             }
         }
 
@@ -251,12 +247,12 @@
             let multiQty = parseFloat(document.getElementById('multiQty').value) || 0;
             let margin = parseFloat(document.getElementById('margin').value) || 0;
 
-            let implantCost = impQty * brand.price; // Fiyat markadan geliyor
-            let abutmentCost = (abutQty * 0.8) * appData.globalPrices.abutment; // Fiyat ayarlardan geliyor
-            let multiunitCost = multiQty * appData.globalPrices.multiunit; // Fiyat ayarlardan geliyor
+            let implantCost = impQty * brand.price;
+            let abutmentCost = (abutQty * 0.8) * appData.globalPrices.abutment; 
+            let multiunitCost = multiQty * appData.globalPrices.multiunit; 
             
             let setCount = impQty > 0 ? Math.ceil(impQty / 100) : 0;
-            let setCost = setCount * appData.globalPrices.set; // Fiyat ayarlardan geliyor
+            let setCost = setCount * appData.globalPrices.set; 
 
             let totalCost = implantCost + abutmentCost + multiunitCost + setCost;
             
@@ -282,7 +278,6 @@
             document.getElementById('resultBox').style.display = 'block';
         }
 
-        // Uygulamayı başlat
         init();
     </script>
 </body>
