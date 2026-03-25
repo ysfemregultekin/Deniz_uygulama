@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İmplant Fiyat Hesaplayıcı</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f9; }
+        .container { max-width: 400px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #333; }
+        label { font-weight: bold; display: block; margin-top: 10px; font-size: 14px; }
+        input { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 16px;}
+        button { width: 100%; padding: 12px; background-color: #28a745; color: white; border: none; border-radius: 4px; margin-top: 20px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        .result { margin-top: 20px; padding: 15px; background-color: #e9ecef; border-radius: 4px; text-align: center; }
+        .result p { margin: 5px 0; font-size: 16px; }
+        .highlight { font-weight: bold; color: #d9534f; font-size: 24px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Fiyat Hesaplayıcı</h2>
+
+        <label>İmplant Adeti</label>
+        <input type="number" id="impQty" placeholder="Örn: 150">
+
+        <label>İmplant Birim Maliyeti</label>
+        <input type="number" id="impPrice" placeholder="Örn: 500">
+
+        <label>Abutment Adeti</label>
+        <input type="number" id="abutQty" placeholder="Örn: 150">
+
+        <label>Abutment Birim Maliyeti</label>
+        <input type="number" id="abutPrice" placeholder="Örn: 200">
+
+        <label>Multiunit Birim Maliyeti</label>
+        <input type="number" id="multiPrice" placeholder="Örn: 300">
+
+        <label>Hedeflenen Brüt Kâr Marjı (%)</label>
+        <input type="number" id="margin" placeholder="Örn: 40">
+
+        <button onclick="calculate()">Hesapla</button>
+
+        <div class="result" id="resultBox" style="display:none;">
+            <p>Toplam Maliyet: <strong id="totalCostDisplay">0</strong></p>
+            <p>Satılması Gereken Fiyat:</p>
+            <p class="highlight" id="sellPriceDisplay">0</p>
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            let impQty = parseFloat(document.getElementById('impQty').value) || 0;
+            let impPrice = parseFloat(document.getElementById('impPrice').value) || 0;
+            let abutQty = parseFloat(document.getElementById('abutQty').value) || 0;
+            let abutPrice = parseFloat(document.getElementById('abutPrice').value) || 0;
+            let multiPrice = parseFloat(document.getElementById('multiPrice').value) || 0;
+            let margin = parseFloat(document.getElementById('margin').value) || 0;
+
+            let implantCost = impQty * impPrice;
+            let abutmentCost = (abutQty * 0.8) * abutPrice; 
+            let multiunitCost = impQty * multiPrice;
+            let setCost = Math.floor(impQty / 100) * 400; 
+
+            let totalCost = implantCost + abutmentCost + multiunitCost + setCost;
+            
+            let sellPrice = 0;
+            if (margin >= 100) {
+                alert("Kâr marjı %100 veya daha büyük olamaz!");
+                return;
+            } else {
+                sellPrice = totalCost / (1 - (margin / 100));
+            }
+
+            document.getElementById('totalCostDisplay').innerText = totalCost.toLocaleString('tr-TR', { maximumFractionDigits: 2 });
+            document.getElementById('sellPriceDisplay').innerText = sellPrice.toLocaleString('tr-TR', { maximumFractionDigits: 2 });
+            document.getElementById('resultBox').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
