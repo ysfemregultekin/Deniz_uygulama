@@ -3,115 +3,289 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>İmplant Fiyat Hesaplayıcı Pro By</title>
+    <title>İmplant Fiyat Hesaplayıcı Premium</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 10px; background-color: #f4f4f9; margin: 0; }
-        .container { max-width: 500px; margin: auto; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #333; margin-top: 5px; }
+        :root {
+            --primary: #4361ee;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --dark: #2b2d42;
+            --light: #f8f9fa;
+            --gray: #8d99ae;
+        }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            padding: 10px; 
+            background-color: #edf2f4; 
+            margin: 0; 
+            color: var(--dark);
+        }
+
+        .container { 
+            max-width: 500px; 
+            margin: auto; 
+            background: white; 
+            padding: 20px; 
+            border-radius: 16px; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05); 
+        }
+
+        h2 { 
+            text-align: center; 
+            margin-top: 0; 
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
         
         /* Sekme (Tab) Tasarımı */
-        .tab-menu { display: flex; overflow-x: auto; border-bottom: 2px solid #ddd; margin-bottom: 15px; padding-bottom: 5px; }
-        .tab-btn { flex: 0 0 auto; padding: 10px 15px; margin-right: 5px; background: #eee; border: none; border-radius: 5px 5px 0 0; cursor: pointer; font-weight: bold; font-size: 14px; }
-        .tab-btn.active { background: #007bff; color: white; }
-        .tab-btn.settings-tab { background: #6c757d; color: white; }
-        .tab-btn.settings-tab.active { background: #343a40; }
-
-        label { font-weight: bold; display: block; margin-top: 12px; font-size: 14px; color: #444; }
-        input { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 16px;}
-        button { width: 100%; padding: 12px; background-color: #28a745; color: white; border: none; border-radius: 4px; margin-top: 15px; font-size: 16px; font-weight: bold; cursor: pointer; }
-        button.add-btn { background-color: #17a2b8; margin-top: 10px; }
-        button.delete-btn { background-color: #dc3545; padding: 6px; font-size: 12px; width: auto; margin: 0; float: right; }
+        .tab-menu { 
+            display: flex; 
+            overflow-x: auto; 
+            margin-bottom: 20px; 
+            padding-bottom: 10px; 
+            gap: 10px;
+            scrollbar-width: none;
+        }
+        .tab-menu::-webkit-scrollbar { display: none; }
         
-        .result { margin-top: 20px; padding: 15px; background-color: #e9ecef; border-radius: 4px; }
-        .result p { margin: 5px 0; font-size: 14px; }
-        .highlight { font-weight: bold; color: #d9534f; font-size: 20px; text-align: center; display: block; margin-top: 10px; }
-        hr { border: 1px solid #ddd; margin: 15px 0; }
+        .tab-btn { 
+            flex: 0 0 auto; 
+            padding: 12px 20px; 
+            background: var(--light); 
+            border: 2px solid transparent; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 14px; 
+            color: var(--gray);
+            transition: all 0.3s ease;
+        }
+        .tab-btn.active { 
+            background: rgba(67, 97, 238, 0.1); 
+            border-color: var(--primary); 
+            color: var(--primary); 
+        }
+        .tab-btn.settings-tab { color: var(--dark); }
+        .tab-btn.settings-tab.active { 
+            background: var(--dark); 
+            border-color: var(--dark);
+            color: white;
+        }
 
-        .brand-item { background: #f8f9fa; padding: 10px; border: 1px solid #ddd; margin-top: 10px; border-radius: 4px; overflow: hidden; }
-        .brand-info { float: left; margin-top: 4px; font-weight: bold; }
+        /* Form Elemanları */
+        .form-group { margin-bottom: 15px; }
+        label { 
+            font-weight: 600; 
+            display: block; 
+            margin-bottom: 6px; 
+            font-size: 13px; 
+            color: var(--gray); 
+        }
+        input { 
+            width: 100%; 
+            padding: 12px; 
+            border: 1px solid #dfe6e9; 
+            border-radius: 8px; 
+            box-sizing: border-box; 
+            font-size: 15px;
+            background-color: var(--light);
+            transition: border 0.3s;
+        }
+        input:focus { 
+            outline: none; 
+            border-color: var(--primary); 
+            background-color: white;
+        }
+
+        /* Butonlar */
+        button { 
+            width: 100%; 
+            padding: 14px; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 15px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: transform 0.1s, opacity 0.3s;
+        }
+        button:active { transform: scale(0.98); }
         
-        .section-title { background: #343a40; color: white; padding: 8px; border-radius: 4px; margin-top: 20px; font-size: 15px; text-align: center; }
+        .btn-success { background-color: var(--success); color: white; }
+        .btn-primary { background-color: var(--primary); color: white; }
+        
+        /* Hesaplama Sonucu */
+        .result { 
+            margin-top: 25px; 
+            padding: 20px; 
+            background-color: rgba(46, 204, 113, 0.1); 
+            border-radius: 12px; 
+            border: 1px solid rgba(46, 204, 113, 0.3);
+        }
+        .result p { margin: 8px 0; font-size: 14px; display: flex; justify-content: space-between;}
+        .result hr { border: none; border-top: 1px dashed #b2bec3; margin: 15px 0; }
+        .highlight { 
+            font-weight: 800; 
+            color: var(--primary); 
+            font-size: 22px; 
+            text-align: center; 
+            display: block; 
+            margin-top: 15px; 
+        }
+        .proof-text { font-size: 11px; color: var(--gray); text-align: center; margin-top: 10px; display: block;}
+
+        /* Marka Kartları */
+        .brand-card { 
+            background: white; 
+            padding: 15px; 
+            border: 1px solid #dfe6e9; 
+            border-radius: 12px; 
+            margin-bottom: 15px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+        .brand-header { 
+            font-size: 18px; 
+            font-weight: 700; 
+            color: var(--dark); 
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #edf2f4;
+        }
+        .price-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 10px; 
+            margin-bottom: 15px; 
+        }
+        .price-item { 
+            background: var(--light); 
+            padding: 10px; 
+            border-radius: 8px; 
+            font-size: 13px;
+        }
+        .price-item span { display: block; color: var(--gray); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px;}
+        .price-item strong { color: var(--dark); font-size: 14px; }
+        
+        .card-actions { display: flex; gap: 10px; }
+        .card-actions button { padding: 10px; font-size: 13px; }
+        .btn-edit { background-color: var(--warning); color: white; }
+        .btn-delete { background-color: var(--danger); color: white; }
+        .btn-cancel { background-color: var(--gray); color: white; }
+
+        .section-title { 
+            font-size: 16px; 
+            font-weight: 700; 
+            margin: 30px 0 15px 0; 
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+        }
+        .section-title::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #dfe6e9;
+            margin-left: 10px;
+        }
+
+        .edit-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="tab-menu" id="tabMenu">
-            </div>
+        <div class="tab-menu" id="tabMenu"></div>
 
         <div id="settingsView">
-            <h2>Genel Ayarlar</h2>
+            <h2>⚙️ Marka Yönetimi</h2>
             
-            <div class="section-title">Sabit Maliyet Kalemleri</div>
-            <label>Abutment Birim Fiyatı</label>
-            <input type="number" id="setAbutPrice" placeholder="Örn: 200">
-            
-            <label>Multiunit Birim Fiyatı</label>
-            <input type="number" id="setMultiPrice" placeholder="Örn: 300">
-            
-            <label>Cerrahi Set Birim Fiyatı</label>
-            <input type="number" id="setSetPrice" placeholder="Örn: 400">
-            
-            <button onclick="saveGlobalSettings()">Sabit Fiyatları Kaydet</button>
+            <div id="brandsList"></div>
 
-            <div class="section-title">İmplant Markaları</div>
-            <label>Yeni Marka Adı</label>
-            <input type="text" id="newBrandName" placeholder="Örn: Alphatech">
-            
-            <label>Yeni Marka Birim Maliyeti</label>
-            <input type="number" id="newBrandPrice" placeholder="Örn: 500">
-            
-            <button class="add-btn" onclick="addBrand()">Markayı Ekle</button>
-
-            <div id="brandsList" style="margin-top: 20px;">
+            <div class="section-title">Yeni Marka Ekle</div>
+            <div class="brand-card">
+                <div class="form-group">
+                    <label>Marka Adı</label>
+                    <input type="text" id="newName" placeholder="Örn: Alphatech">
                 </div>
+                <div class="edit-grid">
+                    <div class="form-group">
+                        <label>İmplant (₺)</label>
+                        <input type="number" id="newImpPrice" placeholder="500">
+                    </div>
+                    <div class="form-group">
+                        <label>Abutment (₺)</label>
+                        <input type="number" id="newAbutPrice" placeholder="200">
+                    </div>
+                    <div class="form-group">
+                        <label>Multiunit (₺)</label>
+                        <input type="number" id="newMultiPrice" placeholder="300">
+                    </div>
+                    <div class="form-group">
+                        <label>Cerrahi Set (₺)</label>
+                        <input type="number" id="newSetPrice" placeholder="400">
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="addBrand()">Markayı Listeye Ekle</button>
+            </div>
         </div>
 
         <div id="calcView" style="display:none;">
             <h2 id="calcTitle">Hesaplayıcı</h2>
-            <p style="text-align: center; color: #666; font-size: 13px;">Birim maliyetler ayarlardan otomatik alınmaktadır.</p>
 
-            <label>İmplant Adeti</label>
-            <input type="number" id="impQty" placeholder="Örn: 50">
+            <div class="form-group">
+                <label>İmplant Adeti</label>
+                <input type="number" id="impQty" placeholder="Örn: 50">
+            </div>
 
-            <label>Abutment Adeti (%20 Bedelsiz)</label>
-            <input type="number" id="abutQty" placeholder="Örn: 50">
+            <div class="form-group">
+                <label>Abutment Adeti (%20 Bedelsiz)</label>
+                <input type="number" id="abutQty" placeholder="Örn: 50">
+            </div>
 
-            <label>Multiunit Adeti</label>
-            <input type="number" id="multiQty" placeholder="Örn: 10">
+            <div class="form-group">
+                <label>Multiunit Adeti</label>
+                <input type="number" id="multiQty" placeholder="Örn: 10">
+            </div>
 
-            <label>Hedeflenen Brüt Kâr Marjı (%)</label>
-            <input type="number" id="margin" placeholder="Örn: 40">
+            <div class="form-group">
+                <label>Hedeflenen Brüt Kâr Marjı (%)</label>
+                <input type="number" id="margin" placeholder="Örn: 40">
+            </div>
 
-            <button onclick="calculate()">Hesapla</button>
+            <button class="btn-success" onclick="calculate()">Maliyeti ve Satışı Hesapla</button>
 
             <div class="result" id="resultBox" style="display:none;">
-                <p><strong>Maliyet Dökümü:</strong></p>
-                <p>İmplant: <span id="impCostDisp"></span></p>
-                <p>Abutment (%20 Hediyeli): <span id="abutCostDisp"></span></p>
-                <p>Multiunit: <span id="multiCostDisp"></span></p>
-                <p>Cerrahi Set (<span id="setCountDisp"></span> Adet): <span id="setCostDisp"></span></p>
+                <p><strong>Maliyet Dökümü</strong></p>
                 <hr>
-                <p><strong>Toplam Maliyet:</strong> <span id="totalCostDisplay"></span></p>
-                <span class="highlight">Satılması Gereken Fiyat: <br> <span id="sellPriceDisplay"></span></span>
+                <p><span>İmplant:</span> <strong id="impCostDisp"></strong></p>
+                <p><span>Abutment (%20 Hediye):</span> <strong id="abutCostDisp"></strong></p>
+                <p><span>Multiunit:</span> <strong id="multiCostDisp"></strong></p>
+                <p><span>Cerrahi Set (<span id="setCountDisp"></span>x):</span> <strong id="setCostDisp"></strong></p>
                 <hr>
-                <p><strong>Sağlama (Marj Kontrolü):</strong></p>
-                <p style="font-size: 12px; color: #555;" id="proofDisp"></p>
+                <p><span>Toplam Maliyet:</span> <strong id="totalCostDisplay"></strong></p>
+                <span class="highlight">Satılması Gereken Fiyat<br><br><span id="sellPriceDisplay"></span></span>
+                <span class="proof-text" id="proofDisp"></span>
             </div>
         </div>
     </div>
 
     <script>
-        let appData = JSON.parse(localStorage.getItem('implantAppData')) || {
-            globalPrices: { abutment: 200, multiunit: 300, set: 400 },
+        // Yeni veri yapısı için farklı bir anahtar kelime kullandık
+        let appData = JSON.parse(localStorage.getItem('implantProV2')) || {
             brands: [
-                { id: Date.now().toString(), name: 'Örnek Marka', price: 500 }
+                { id: Date.now().toString(), name: 'Örnek Marka', impPrice: 500, abutPrice: 200, multiPrice: 300, setPrice: 400 }
             ]
         };
 
         let activeBrandId = null;
+        let editingBrandId = null;
 
         function saveData() {
-            localStorage.setItem('implantAppData', JSON.stringify(appData));
+            localStorage.setItem('implantProV2', JSON.stringify(appData));
         }
 
         function init() {
@@ -130,7 +304,7 @@
             const settingsBtn = document.createElement('button');
             settingsBtn.className = 'tab-btn settings-tab';
             settingsBtn.id = 'tab-settings';
-            settingsBtn.innerText = '⚙️ Ayarlar';
+            settingsBtn.innerText = '⚙️ Markalar';
             settingsBtn.onclick = openSettingsView;
             menu.appendChild(settingsBtn);
 
@@ -152,19 +326,16 @@
 
         function openSettingsView() {
             activeBrandId = null;
+            editingBrandId = null;
             updateTabStyles('settings');
             document.getElementById('calcView').style.display = 'none';
             document.getElementById('settingsView').style.display = 'block';
-
-            document.getElementById('setAbutPrice').value = appData.globalPrices.abutment;
-            document.getElementById('setMultiPrice').value = appData.globalPrices.multiunit;
-            document.getElementById('setSetPrice').value = appData.globalPrices.set;
-
             renderBrandsList();
         }
 
         function openCalcView(brandId) {
             activeBrandId = brandId;
+            editingBrandId = null;
             updateTabStyles(brandId);
             document.getElementById('settingsView').style.display = 'none';
             document.getElementById('calcView').style.display = 'block';
@@ -172,37 +343,95 @@
 
             const brand = appData.brands.find(b => b.id === brandId);
             document.getElementById('calcTitle').innerText = brand.name + " Hesaplayıcı";
-
-            document.getElementById('impQty').value = '';
-            document.getElementById('abutQty').value = '';
-            document.getElementById('multiQty').value = '';
-            document.getElementById('margin').value = '';
-        }
-
-        function saveGlobalSettings() {
-            appData.globalPrices.abutment = parseFloat(document.getElementById('setAbutPrice').value) || 0;
-            appData.globalPrices.multiunit = parseFloat(document.getElementById('setMultiPrice').value) || 0;
-            appData.globalPrices.set = parseFloat(document.getElementById('setSetPrice').value) || 0;
-            saveData();
-            alert("Sabit fiyatlar başarıyla kaydedildi!");
         }
 
         function addBrand() {
-            const name = document.getElementById('newBrandName').value.trim();
-            const price = parseFloat(document.getElementById('newBrandPrice').value);
+            const name = document.getElementById('newName').value.trim();
+            const impPrice = parseFloat(document.getElementById('newImpPrice').value) || 0;
+            const abutPrice = parseFloat(document.getElementById('newAbutPrice').value) || 0;
+            const multiPrice = parseFloat(document.getElementById('newMultiPrice').value) || 0;
+            const setPrice = parseFloat(document.getElementById('newSetPrice').value) || 0;
 
-            if (!name || isNaN(price)) {
-                alert("Lütfen geçerli bir marka adı ve birim fiyatı girin.");
-                return;
-            }
+            if (!name) { alert("Lütfen bir marka adı girin."); return; }
 
-            const newBrand = { id: Date.now().toString(), name: name, price: price };
+            const newBrand = { id: Date.now().toString(), name, impPrice, abutPrice, multiPrice, setPrice };
             appData.brands.push(newBrand);
             saveData();
             
-            document.getElementById('newBrandName').value = '';
-            document.getElementById('newBrandPrice').value = '';
+            document.getElementById('newName').value = '';
+            document.getElementById('newImpPrice').value = '';
+            document.getElementById('newAbutPrice').value = '';
+            document.getElementById('newMultiPrice').value = '';
+            document.getElementById('newSetPrice').value = '';
             
+            renderTabs();
+            renderBrandsList();
+        }
+
+        function renderBrandsList() {
+            const list = document.getElementById('brandsList');
+            list.innerHTML = '';
+            
+            appData.brands.forEach(brand => {
+                const card = document.createElement('div');
+                card.className = 'brand-card';
+
+                if (editingBrandId === brand.id) {
+                    card.innerHTML = `
+                        <div class="form-group">
+                            <label>Marka Adı</label>
+                            <input type="text" id="edit_name" value="${brand.name}">
+                        </div>
+                        <div class="edit-grid">
+                            <div class="form-group"><label>İmplant (₺)</label><input type="number" id="edit_imp" value="${brand.impPrice}"></div>
+                            <div class="form-group"><label>Abutment (₺)</label><input type="number" id="edit_abut" value="${brand.abutPrice}"></div>
+                            <div class="form-group"><label>Multiunit (₺)</label><input type="number" id="edit_multi" value="${brand.multiPrice}"></div>
+                            <div class="form-group"><label>Set (₺)</label><input type="number" id="edit_set" value="${brand.setPrice}"></div>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-success" onclick="saveEdit('${brand.id}')">Kaydet</button>
+                            <button class="btn-cancel" onclick="cancelEdit()">İptal</button>
+                        </div>
+                    `;
+                } else {
+                    card.innerHTML = `
+                        <div class="brand-header">${brand.name}</div>
+                        <div class="price-grid">
+                            <div class="price-item"><span>İmplant</span><strong>${formatCurrency(brand.impPrice)}</strong></div>
+                            <div class="price-item"><span>Abutment</span><strong>${formatCurrency(brand.abutPrice)}</strong></div>
+                            <div class="price-item"><span>Multiunit</span><strong>${formatCurrency(brand.multiPrice)}</strong></div>
+                            <div class="price-item"><span>Cerrahi Set</span><strong>${formatCurrency(brand.setPrice)}</strong></div>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-edit" onclick="startEdit('${brand.id}')">Düzenle</button>
+                            <button class="btn-delete" onclick="deleteBrand('${brand.id}')">Sil</button>
+                        </div>
+                    `;
+                }
+                list.appendChild(card);
+            });
+        }
+
+        function startEdit(id) {
+            editingBrandId = id;
+            renderBrandsList();
+        }
+
+        function cancelEdit() {
+            editingBrandId = null;
+            renderBrandsList();
+        }
+
+        function saveEdit(id) {
+            const brand = appData.brands.find(b => b.id === id);
+            brand.name = document.getElementById('edit_name').value.trim() || brand.name;
+            brand.impPrice = parseFloat(document.getElementById('edit_imp').value) || 0;
+            brand.abutPrice = parseFloat(document.getElementById('edit_abut').value) || 0;
+            brand.multiPrice = parseFloat(document.getElementById('edit_multi').value) || 0;
+            brand.setPrice = parseFloat(document.getElementById('edit_set').value) || 0;
+            
+            saveData();
+            editingBrandId = null;
             renderTabs();
             renderBrandsList();
         }
@@ -213,28 +442,11 @@
                 saveData();
                 renderTabs();
                 renderBrandsList();
-                if (activeBrandId === id) {
-                    init(); 
-                }
             }
         }
 
-        function renderBrandsList() {
-            const list = document.getElementById('brandsList');
-            list.innerHTML = '';
-            appData.brands.forEach(brand => {
-                const div = document.createElement('div');
-                div.className = 'brand-item';
-                div.innerHTML = `
-                    <span class="brand-info">${brand.name} - ${formatCurrency(brand.price)}</span>
-                    <button class="delete-btn" onclick="deleteBrand('${brand.id}')">Sil</button>
-                `;
-                list.appendChild(div);
-            });
-        }
-
         function formatCurrency(val) {
-            return val.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            return val.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₺';
         }
 
         function calculate() {
@@ -247,12 +459,11 @@
             let multiQty = parseFloat(document.getElementById('multiQty').value) || 0;
             let margin = parseFloat(document.getElementById('margin').value) || 0;
 
-            let implantCost = impQty * brand.price;
-            let abutmentCost = (abutQty * 0.8) * appData.globalPrices.abutment; 
-            let multiunitCost = multiQty * appData.globalPrices.multiunit; 
-            
+            let implantCost = impQty * brand.impPrice;
+            let abutmentCost = (abutQty * 0.8) * brand.abutPrice; 
+            let multiunitCost = multiQty * brand.multiPrice; 
             let setCount = impQty > 0 ? Math.ceil(impQty / 100) : 0;
-            let setCost = setCount * appData.globalPrices.set; 
+            let setCost = setCount * brand.setPrice; 
 
             let totalCost = implantCost + abutmentCost + multiunitCost + setCost;
             
@@ -273,7 +484,7 @@
             document.getElementById('sellPriceDisplay').innerText = formatCurrency(sellPrice);
             
             let proofMargin = sellPrice > 0 ? ((sellPrice - totalCost) / sellPrice) * 100 : 0;
-            document.getElementById('proofDisp').innerText = `(${formatCurrency(sellPrice)} - ${formatCurrency(totalCost)}) / ${formatCurrency(sellPrice)} * 100 = %${proofMargin.toFixed(2)}`;
+            document.getElementById('proofDisp').innerText = `Sağlama: (${formatCurrency(sellPrice)} - ${formatCurrency(totalCost)}) / Satış = %${proofMargin.toFixed(2)}`;
 
             document.getElementById('resultBox').style.display = 'block';
         }
@@ -282,4 +493,3 @@
     </script>
 </body>
 </html>
-
